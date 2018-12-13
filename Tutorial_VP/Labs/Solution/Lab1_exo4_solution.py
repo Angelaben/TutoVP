@@ -3,13 +3,12 @@ class DQNAgent :
 
         self.state_size = state_size
         self.action_size = action_size
-        self.memory = deque(maxlen = 5000)
+        self.memory = deque(maxlen = 2000)
         self.gamma = 0.995  # discount rate
         self.exploration_rate = 1.  # exploration rate
         self.original_epsilon = 1.
         self.min_epsilon = 0.01
         self.exploration_rate_decay = 150
-        #        self.n_episodes = 2500 * 200
         self.n_game_max = 300
         self.model = self._build_model()
         self.model.summary()
@@ -17,10 +16,11 @@ class DQNAgent :
 
     def _build_model(self) :
         input_state = Input((self.state_size,))
-        model = Dense(30, activation = "tanh")(input_state)
+        model = Dense(32, activation = "tanh")(input_state)
         q_value = Dense(self.action_size, activation = "linear")(model)
         dqn = Model([input_state], q_value)
-        dqn.compile(optimizer = tf.keras.optimizers.Adam(lr = 0.01), loss = "mse")
+#        dqn.compile(optimizer = tf.keras.optimizers.Adam(lr = 0.01), loss = "mse")
+        dqn.compile(optimizer = Adam(lr = 0.01), loss = "mse")
         return dqn
 
     def remember(self, state, action, reward, next_state, done) :
